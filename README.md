@@ -21,6 +21,12 @@
   touches nothing on your host until you turn both on deliberately.</sub>
 </p>
 
+<p align="center">
+  <a href="README.tr.md">Türkçe</a> ·
+  <a href="docs/architecture.md">Architecture</a> ·
+  <a href="docs/threat-model.md">Threat model</a>
+</p>
+
 ---
 
 ## Why
@@ -226,109 +232,3 @@ bought: talkdedsec@proton.me
 
 Made by [talkdedsec](https://github.com/Talkdedsec). The attribution is signed with
 Ed25519 and verified at runtime — a build that strips it disables its own enforcement.
-
----
-
-<details>
-<summary><b>Türkçe</b></summary>
-
-**Bu depo topluluk sürümü.** `public` profiliyle çalışıyor: izler, puanlar, raporlar —
-ban atmaz. Güvenlik duvarı yanıtlayıcısı da dry-run başlıyor, yani taze bir klon sen
-ikisini de bilerek açana kadar sunucunda hiçbir şeye dokunmuyor.
-
-### Neden
-
-Küçük sunucu filoları SSH için `fail2ban` çalıştırır, uygulama tarafında hiçbir şey
-yoktur ve olaydan müşteri arayınca haberdar olunur. tlk-sentinel bu boşluğu tek ajanla
-kapatıyor: aynı kural motoru hem sunucu loglarını okuyor **hem de** uygulamanın içinde
-çalışıyor. Böylece `/.env` yoklayan tarayıcı ile giriş ucunu döven aynı IP tek bir
-olay hikâyesi oluyor.
-
-Tek koddan iki davranış çıkıyor. Topluluk sürümü izler ve raporlar, iç sürüm uygular.
-Bu bir kod çatallanması değil, sadece bir JSON profili.
-
-### Neleri yakalıyor
-
-- **SSH**: parola deneme, geçersiz kullanıcı, doğrudan root girişi
-- **HTTP**: SQLi, XSS, dizin atlama, `.env`/`wp-admin`/`phpmyadmin` yoklaması, istek seli
-- **Araçlar**: sqlmap, nikto, nuclei, gobuster, masscan imzaları
-- **Bilinmeyen saldırılar**: hiçbir imzaya uymayan taramalar — istek ritmi, yol
-  çeşitliliği, UA değişimi ve 404 oranından davranış skoru
-- **Bilinen kötü kaynaklar**: offline CIDR itibar listeleri, tehdidi kritiğe çıkarır
-- **Kurcalama**: `.env`, config ve binary dosyalarının sha256 tabanı
-
-Kodlanmış yükler kaçamıyor: istekler eşleştirmeden önce çözülüyor (yüzde, çift yüzde
-ve `+`), yani `?id=1%2520union%2520select%25201` düz hâliyle aynı şekilde yakalanıyor.
-Her kodlama için regresyon testi var.
-
-### Kurulum
-
-Node 22.5+ gerekiyor (yerleşik SQLite için), başka çalışma zamanı bağımlılığı yok.
-
-```bash
-git clone https://github.com/Talkdedsec/tlk-sentinel /opt/tlk-sentinel
-cd /opt/tlk-sentinel && npm install && npm run build
-cp .env.example .env && npm run agent
-```
-
-Güvenlik duvarı **dry-run** başlıyor: uygulayacağı banı loglar, hiçbir şeye dokunmaz.
-Bir gün izle, kararlar doğru görünüyorsa `TLK_FW_DRYRUN=0` yap. nft set komutları
-yukarıdaki açılır bölümde.
-
-### İki sürüm
-
-`public` = izle-raporla, otomatik ban kapalı, özel kurallar yok, sadece stdout.
-`self` = zorla-banla, tekrarlayanda ×4 süre, özel kurallar + bal kabı + bütünlük +
-aktif savunma, Discord bildirimi.
-
-`npm run dist:public` dağıtılacak ağacı üretir: iç profili, özel kuralları ve imza
-anahtarını çıkarır, çıktıyı sır taramasından geçirir, public varsayılanın hâlâ pasif
-olduğunu doğrular. **Kontrollerden biri düşerse build reddedilir** — yani zorlayıcı
-bir varsayılan kazara yayına çıkamaz.
-
-### Panel
-
-Varsayılan `127.0.0.1:8787`. Başka bir arayüze açmak **`TLK_PANEL_TOKEN` zorunlu
-kılar**; token yoksa ajan bağlanmayı reddeder ve bunu açılışta söyler. nginx arkasında
-ayrıca IP kısıtı koy. Kapatmak için `TLK_PANEL=0`. Yazan tüm uçlar girdisini doğrular:
-IP olmayan bir değer asla `nft`'ye ulaşmaz.
-
-### Testler
-
-`npm test` — 60 test, dış çatı yok. Ban eşikleri ve kademeli süre, profil geçidi, üç
-kodlamada WAF bypass direnci, itibar ve ülke tabloları, anomali skoru ve soğuması, log
-takibinin truncate **ve logrotate** altında sağ kalması, bütünlük tabanı, SQLite
-deposu, uyarı gövdeleri, firewall girdi doğrulaması ve config varsayılanları. Dördü
-gerçek ajanı ayağa kaldırıp panel API'sine karşı doğrulama yapan entegrasyon testi;
-ikisi de imzası bozulmuş bir build'in **ban uygulamayı reddettiğini** doğruluyor. CI
-Linux ve Windows'ta, Node 22 ve 24 ile çalışıyor.
-
-### Belgeler
-
-[`docs/architecture.md`](docs/architecture.md) tek bir log satırını dosyadan güvenlik
-duvarına kadar takip ediyor. [`docs/threat-model.md`](docs/threat-model.md) ise kurmadan
-önce okunması gereken: neyi yakalamadığı ve aracın kendisinin sana karşı nasıl
-kullanılabileceği.
-
-### Lisans
-
-Kaynak-erişilebilir ([LICENSE](LICENSE)). Kısa hâli:
-
-| | |
-|:--|:--|
-| Kendi makinelerinde çalıştırmak, şirketinin makineleri dahil | evet |
-| Kendi işin için ticari olarak çalıştırmak | evet |
-| Kendi kurulumun için kaynağı okumak ve değiştirmek | evet |
-| Yama ya da içinde kod olan bir güvenlik bildirimi göndermek | evet |
-| Yeniden dağıtmak, yayınlamak, aynalamak | hayır |
-| Satmak, kiralamak, ücretli bir ürünün içinde vermek | hayır |
-| Başkası için servis olarak barındırmak | hayır |
-| Marka atfını ya da lisans metnini sökmek | hayır |
-
-Tablo özet; bağlayıcı olan [LICENSE](LICENSE) ve içindeki İngilizce metin Türkçe
-çevirinin üstünde. "Hayır" sütunundaki her şey satın alınabilir: talkdedsec@proton.me
-
-Marka Ed25519 ile imzalı ve çalışma anında doğrulanıyor — imzayı söken bir build kendi
-zorlama yeteneğini kapatır.
-
-</details>
