@@ -22,20 +22,25 @@ if (!actual) {
   process.exit(1);
 }
 
-const readme = readFileSync(resolve(root, "README.md"), "utf8");
+const files = new Map();
+const read = (name) => {
+  if (!files.has(name)) files.set(name, readFileSync(resolve(root, name), "utf8"));
+  return files.get(name);
+};
 
 const claims = [
-  ["badge", /tests-(\d+)%20passing/],
-  ["prose", /(\d+) tests on Node's built-in runner/],
-  ["layout", /tests\/\s+(\d+) tests, no framework/],
-  ["türkçe", /`npm test` — (\d+) test,/],
+  ["badge", "README.md", /tests-(\d+)%20passing/],
+  ["prose", "README.md", /(\d+) tests on Node's built-in runner/],
+  ["layout", "README.md", /tests\/\s+(\d+) tests, no framework/],
+  ["prose (tr)", "README.tr.md", /yerleşik koşucusunda (\d+) test,/],
+  ["layout (tr)", "README.tr.md", /tests\/\s+(\d+) test,/],
 ];
 
 const wrong = [];
-for (const [where, re] of claims) {
-  const hit = readme.match(re);
-  if (!hit) wrong.push(`${where}: the sentence this check anchors on is gone from README.md`);
-  else if (Number(hit[1]) !== actual) wrong.push(`${where}: README says ${hit[1]}, the suite has ${actual}`);
+for (const [where, file, re] of claims) {
+  const hit = read(file).match(re);
+  if (!hit) wrong.push(`${where}: the sentence this check anchors on is gone from ${file}`);
+  else if (Number(hit[1]) !== actual) wrong.push(`${where}: ${file} says ${hit[1]}, the suite has ${actual}`);
 }
 
 if (wrong.length) {
@@ -44,4 +49,4 @@ if (wrong.length) {
   process.exit(1);
 }
 
-console.log(`README matches the suite: ${actual} tests`);
+console.log(`READMEs match the suite: ${actual} tests`);
