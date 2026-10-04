@@ -171,12 +171,14 @@ test("panel refuses to bind non-loopback without token", async () => {
     TLK_DB: join(dir, "b.db"),
   }, 8851);
   let out = "";
+  let err = "";
   agent.stdout.on("data", d => (out += d));
-  await delay(1500);
+  agent.stderr.on("data", d => (err += d));
+  await waitFor(() => /panel DISABLED/.test(out));
   agent.kill();
   await delay(300);
   try { rmSync(dir, { recursive: true, force: true }); } catch {}
-  assert.match(out, /panel DISABLED/, `expected refusal, got:\n${out}`);
+  assert.match(out, /panel DISABLED/, `expected refusal, got:\n${out}\nstderr:\n${err}`);
 });
 
 test("public build strips self artifacts and passes checks", () => {
