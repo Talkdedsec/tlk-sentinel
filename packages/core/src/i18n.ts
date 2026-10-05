@@ -2,7 +2,7 @@ import type { Lang, LocalizedText } from "./events.js";
 
 export function resolveText(text: string | LocalizedText, lang: Lang): string {
   if (typeof text === "string") return text;
-  return text[lang] ?? text.tr ?? text.en;
+  return text[lang] ?? text.en ?? text.tr;
 }
 
 type Key =
@@ -17,21 +17,23 @@ type Key =
   | "integrityWatch"
   | "banAction"
   | "unbanAction"
-  | "dryPrefix";
+  | "dryPrefix"
+  | "behavioralAnomaly";
 
 const CATALOG: Record<Key, LocalizedText> = {
-  signatureOk: { tr: "imza doğrulandı", en: "signature ok" },
-  signatureTampered: { tr: "İMZA DEĞİŞTİRİLMİŞ", en: "SIGNATURE TAMPERED" },
-  alertBan: { tr: "BAN", en: "BAN" },
-  alertWarn: { tr: "UYARI", en: "WARN" },
-  blocked: { tr: "engellendi", en: "blocked" },
-  startProfile: { tr: "profil", en: "profile" },
-  sourceBound: { tr: "kaynak bağlandı", en: "source bound" },
-  noSource: { tr: "hiçbir log kaynağı ayarlı değil", en: "no log source configured" },
-  integrityWatch: { tr: "bütünlük izleme", en: "integrity watch" },
-  banAction: { tr: "ban", en: "ban" },
-  unbanAction: { tr: "ban kalktı", en: "unban" },
-  dryPrefix: { tr: "[deneme]", en: "[dry-run]" },
+  signatureOk: { en: "signature ok", tr: "imza doğrulandı" },
+  signatureTampered: { en: "SIGNATURE TAMPERED", tr: "İMZA DEĞİŞTİRİLMİŞ" },
+  alertBan: { en: "BAN", tr: "BAN" },
+  alertWarn: { en: "WARN", tr: "UYARI" },
+  blocked: { en: "blocked", tr: "engellendi" },
+  startProfile: { en: "profile", tr: "profil" },
+  sourceBound: { en: "source bound", tr: "kaynak bağlandı" },
+  noSource: { en: "no log source configured", tr: "hiçbir log kaynağı ayarlı değil" },
+  integrityWatch: { en: "integrity watch", tr: "bütünlük izleme" },
+  banAction: { en: "ban", tr: "ban" },
+  unbanAction: { en: "unban", tr: "ban kalktı" },
+  dryPrefix: { en: "[dry-run]", tr: "[deneme]" },
+  behavioralAnomaly: { en: "Behavioral anomaly", tr: "Davranışsal anomali" },
 };
 
 export function t(key: Key, lang: Lang): string {

@@ -127,7 +127,7 @@ function feedAnomaly(line: string): void {
       severity: "high",
       ip: obs.ip,
       at: obs.at,
-      summary: lang === "en" ? "Behavioral anomaly" : "Davranışsal anomali",
+      summary: t("behavioralAnomaly", lang),
       evidence: [s.reasons.join(" ")],
       hits: s.score,
       score: s.score,
