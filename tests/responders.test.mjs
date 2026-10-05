@@ -152,7 +152,7 @@ test("loadConfig applies safe defaults and parses env", () => {
   try {
     const d = loadConfig("/srv/app");
     assert.match(d.profilePath, /public\.json$/, "defaults to the passive profile");
-    assert.equal(d.lang, "tr");
+    assert.equal(d.lang, "en", "English unless TLK_LANG=tr");
     assert.equal(d.firewall.dryRun, true, "dry-run must be the default");
     assert.equal(d.panel.host, "127.0.0.1", "panel must default to loopback");
     assert.equal(d.panel.token, null);
@@ -160,7 +160,7 @@ test("loadConfig applies safe defaults and parses env", () => {
     assert.deepEqual(d.integrityTargets, []);
     assert.equal(d.anomaly, true);
 
-    process.env.TLK_LANG = "en";
+    process.env.TLK_LANG = "tr";
     process.env.TLK_FW_DRYRUN = "0";
     process.env.TLK_ALLOWLIST = "10.0.0.1, 10.0.0.2 ,";
     process.env.TLK_INTEGRITY = "/etc/a.conf, /etc/b.conf";
@@ -168,7 +168,7 @@ test("loadConfig applies safe defaults and parses env", () => {
     process.env.TLK_ANOMALY = "0";
     process.env.TLK_PROFILE_PATH = "/custom/self.json";
     const c = loadConfig("/srv/app");
-    assert.equal(c.lang, "en");
+    assert.equal(c.lang, "tr");
     assert.equal(c.firewall.dryRun, false);
     assert.deepEqual(c.allowlist, ["10.0.0.1", "10.0.0.2"]);
     assert.deepEqual(c.integrityTargets, ["/etc/a.conf", "/etc/b.conf"]);

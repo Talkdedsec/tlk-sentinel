@@ -158,7 +158,7 @@ Verdicts carry hardened response headers (`nosniff`, `DENY`, HSTS, a locked-down
 |---|---|---|
 | `TLK_PROFILE` | `public` | which profile in `profiles/` to load |
 | `TLK_PROFILE_PATH` | – | explicit profile file, overrides the above |
-| `TLK_LANG` | `tr` | `tr` or `en`, applies to logs, alerts and panel |
+| `TLK_LANG` | `en` | `en` or `tr`, applies to logs, alerts and panel |
 | `TLK_SSHD_LOG` | `/var/log/auth.log` | empty disables the source |
 | `TLK_NGINX_LOG` | – | nginx access log |
 | `TLK_FW_BACKEND` | `nft` | `nft`, `ipset` or `none` |
