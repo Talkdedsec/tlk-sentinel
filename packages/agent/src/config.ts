@@ -39,7 +39,7 @@ function envOrNull(name: string): string | null {
 
 export function loadConfig(root: string): AgentConfig {
   const profile = env("TLK_PROFILE", "public");
-  const lang: Lang = env("TLK_LANG", "tr") === "en" ? "en" : "tr";
+  const lang: Lang = env("TLK_LANG", "en") === "tr" ? "tr" : "en";
   const explicitProfile = envOrNull("TLK_PROFILE_PATH");
   return {
     lang,

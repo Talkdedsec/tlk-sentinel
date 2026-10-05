@@ -159,7 +159,7 @@ Kararlar sertleştirilmiş yanıt başlıklarını taşır (`nosniff`, `DENY`, H
 |---|---|---|
 | `TLK_PROFILE` | `public` | `profiles/` altından yüklenecek profil |
 | `TLK_PROFILE_PATH` | – | açık profil dosyası, üstekini geçersiz kılar |
-| `TLK_LANG` | `tr` | `tr` ya da `en`; log, bildirim ve panele uygulanır |
+| `TLK_LANG` | `en` | `en` ya da `tr`; log, bildirim ve panele uygulanır |
 | `TLK_SSHD_LOG` | `/var/log/auth.log` | boş bırakmak kaynağı kapatır |
 | `TLK_NGINX_LOG` | – | nginx erişim logu |
 | `TLK_FW_BACKEND` | `nft` | `nft`, `ipset` ya da `none` |

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Logs, alerts and the panel are English by default. Set `TLK_LANG=tr` for Turkish; until now
+  Turkish was the default and English needed `TLK_LANG=en`. Missing translations fall back to
+  English.
+- The behavioural-anomaly summary comes from the message catalog instead of an inline pair.
+
 ## 1.1.0 — 2026-08-24
 
 No change to detection or response. Everything here is about being able to check the
