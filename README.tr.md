@@ -235,3 +235,7 @@ Tablo özettir; bağlayıcı olan [LICENSE](LICENSE) ve içindeki İngilizce met
 [talkdedsec](https://github.com/Talkdedsec) tarafından yapıldı. Marka atfı Ed25519 ile
 imzalı ve çalışma anında doğrulanıyor — atfı söken bir build kendi zorlama yeteneğini
 kapatır.
+
+<p align="center">
+  <sub><a href="https://talkdedsec.com">Talkdedsec</a> tarafından yapıldı</sub>
+</p>

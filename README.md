@@ -232,3 +232,7 @@ bought: talkdedsec@proton.me
 
 Made by [talkdedsec](https://github.com/Talkdedsec). The attribution is signed with
 Ed25519 and verified at runtime — a build that strips it disables its own enforcement.
+
+<p align="center">
+  <sub>Built by <a href="https://talkdedsec.com">Talkdedsec</a></sub>
+</p>
