@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tlk-sentinel — detect, ban and explain, in one process</title>
+<meta name="description" content="Server and application security engine: reads SSH and nginx logs, runs inside your Next.js app, scores unknown scans, bans the source and shows it on a live panel. Node 22.5+, zero runtime dependencies. Source-available.">
+<link rel="canonical" href="https://talkdedsec.github.io/tlk-sentinel/">
+<meta name="theme-color" content="#080c16">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="tlk-sentinel — detect, ban and explain, in one process">
+<meta property="og:description" content="One rule engine for your server logs and your application. Reputation, behavioural scoring, live panel. Source-available.">
+<meta property="og:url" content="https://talkdedsec.github.io/tlk-sentinel/">
+<meta property="og:image" content="https://talkdedsec.github.io/tlk-sentinel/og.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d1220'/%3E%3Cpath d='M16 6l8 3v6c0 5-3.4 8.6-8 11-4.6-2.4-8-6-8-11V9z' fill='none' stroke='%233ddc97' stroke-width='2'/%3E%3Cpath d='M12.5 15.5l2.5 2.5 4.5-5' fill='none' stroke='%233ddc97' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Martian+Mono:wdth,wght@75..112.5,300..600&display=swap">
+<link rel="stylesheet" href="site.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"tlk-sentinel","applicationCategory":"SecurityApplication","operatingSystem":"Linux, Windows (Node.js 22.5+)","downloadUrl":"https://github.com/Talkdedsec/tlk-sentinel/releases/latest","author":{"@type":"Person","name":"Talkdedsec","url":"https://talkdedsec.com"}}
+</script>
+<script src="site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<header class="top">
+  <a class="brand" href="#top"><svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M16 4l9 3.4v6.8c0 5.6-3.8 9.7-9 12.4-5.2-2.7-9-6.8-9-12.4V7.4z" fill="none" stroke="currentColor" stroke-width="2"/></svg>tlk-sentinel</a>
+  <nav class="nav" aria-label="Sections">
+    <a href="#try" data-i18n="nav.try">Try a payload</a>
+    <a href="#catches" data-i18n="nav.catch">What it catches</a>
+    <a href="#builds" data-i18n="nav.builds">Two builds</a>
+    <a href="#install" data-i18n="nav.install">Install</a>
+  </nav>
+  <div class="top-end">
+    <button class="lang" type="button" aria-label="Türkçe / English"><span data-l="en">EN</span><span data-l="tr">TR</span></button>
+    <a class="gh" href="https://github.com/Talkdedsec/tlk-sentinel" aria-label="Source on GitHub"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" id="top">
+  <p class="over mono" data-i18n="hero.over">SSH · nginx · Next.js middleware · reputation · behavioural scoring · live panel</p>
+  <h1 class="display">
+    <span class="w" data-i18n="hero.a">Detect.</span>
+    <span class="w" data-i18n="hero.b">Ban.</span>
+    <span class="w acc" data-i18n="hero.c">Explain.</span>
+  </h1>
+  <p class="lede" data-i18n-html="hero.lede">Most small fleets run fail2ban for SSH, nothing for the application, and hear about an incident from a customer. tlk-sentinel reads your server logs <b>and</b> runs inside your app, so a scanner probing <code>/.env</code> and the same IP hammering your login are <b>one story, not two</b>.</p>
+
+  <div class="ops" aria-label="Live demo: log lines on the left, decisions on the right" data-i18n-aria="ops.aria">
+    <div class="ops-bar mono">
+      <span class="dot"></span><span data-i18n="ops.live">live · simulated traffic</span>
+      <div class="prof" role="radiogroup" aria-label="Profile" data-i18n-aria="ops.profile">
+        <button role="radio" aria-checked="true" data-p="public">public</button>
+        <button role="radio" aria-checked="false" data-p="self">self</button>
+      </div>
+    </div>
+    <div class="ops-body">
+      <ol class="stream mono" aria-hidden="true"></ol>
+      <ol class="feed" aria-live="off"></ol>
+    </div>
+    <p class="ops-note mono" aria-live="polite"></p>
+  </div>
+</section>
+
+<section class="community">
+  <p class="big-q" data-i18n-html="c.q">The community build <em>watches, scores and reports.</em> It never bans.</p>
+  <p class="body" data-i18n="c.p">It runs the public profile, and the firewall responder starts in dry-run, so a fresh clone touches nothing on your host until you turn both on deliberately. Watch it for a day, confirm the decisions look right, then set TLK_FW_DRYRUN=0.</p>
+</section>
+
+<section class="try" id="try">
+  <div class="try-head">
+    <p class="over mono" data-i18n="t.over">01 — Try to sneak one past it</p>
+    <h2 class="h2" data-i18n-html="t.h">Encoded twice? <span class="acc">Decoded twice.</span></h2>
+    <p class="body" data-i18n="t.p">Requests are decoded (percent, double-percent and +) before matching, so a payload wrapped in %25 is caught exactly like its plain form. This box runs the same decoder and the same public nginx and web rules, in your browser.</p>
+  </div>
+  <div class="lab">
+    <label class="mono lbl" for="req" data-i18n="t.label">request line</label>
+    <textarea id="req" class="mono" rows="2" spellcheck="false">GET /?id=1%2520union%2520select%25201 HTTP/1.1</textarea>
+    <div class="presets" role="group" aria-label="Examples" data-i18n-aria="t.examples">
+      <button type="button" data-x="GET /?id=1%2520union%2520select%25201 HTTP/1.1">double-encoded SQLi</button>
+      <button type="button" data-x="GET /.env HTTP/1.1">.env probe</button>
+      <button type="button" data-x="GET /static/..%2f..%2f..%2fetc/passwd HTTP/1.1">traversal</button>
+      <button type="button" data-x="GET /search?q=%3Cscript%3Ealert(document.cookie)%3C/script%3E HTTP/1.1">XSS</button>
+      <button type="button" data-x="GET / HTTP/1.1&quot; 200 512 &quot;-&quot; &quot;sqlmap/1.8#stable">sqlmap UA</button>
+      <button type="button" data-x="GET /products?page=2 HTTP/1.1" data-i18n="t.clean">clean request</button>
+    </div>
+    <ol class="layers mono"></ol>
+    <div class="verdict" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="flow">
+  <p class="over mono" data-i18n="fl.over">02 — One agent</p>
+  <div class="pipe">
+    <ul class="ins mono">
+      <li>auth.log</li><li>access.log</li><li data-i18n="fl.mw">Next.js middleware</li><li data-i18n="fl.files">files (sha256)</li>
+    </ul>
+    <div class="core">
+      <svg class="wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 12 C40 12 40 50 50 50"/><path d="M0 37 C40 37 40 50 50 50"/><path d="M0 63 C40 63 40 50 50 50"/><path d="M0 88 C40 88 40 50 50 50"/>
+        <path d="M50 50 C60 50 60 12 100 12"/><path d="M50 50 C60 50 60 37 100 37"/><path d="M50 50 C60 50 60 63 100 63"/><path d="M50 50 C60 50 60 88 100 88"/>
+      </svg>
+      <div class="engine"><b data-i18n="fl.engine">engine</b><span class="mono" data-i18n="fl.parts">rules · reputation · anomaly</span></div>
+    </div>
+    <ul class="outs">
+      <li><b class="mono">nft / ipset</b><span data-i18n="fl.o1">ban, escalating on repeat</span></li>
+      <li><b class="mono">SQLite</b><span data-i18n="fl.o2">queryable event history</span></li>
+      <li><b class="mono" data-i18n="fl.panel">live panel</b><span data-i18n="fl.o3">SSE dashboard, one-click unban</span></li>
+      <li><b class="mono">Discord</b><span data-i18n="fl.o4">an embed per threat</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="catches" id="catches">
+  <p class="over mono" data-i18n="ca.over">03 — What it catches</p>
+  <div class="cards">
+    <article class="card reveal"><span class="tag mono">SSH</span><h3 data-i18n="ca.1h">Brute force, invalid users, root logins</h3><p data-i18n="ca.1">Threshold windows per IP.</p></article>
+    <article class="card reveal"><span class="tag mono">HTTP</span><h3 data-i18n="ca.2h">SQLi, XSS, traversal, probing, floods</h3><p data-i18n="ca.2">Regex rules on normalized requests: .env, wp-admin, phpmyadmin and friends.</p></article>
+    <article class="card reveal"><span class="tag mono" data-i18n="ca.3t">Tooling</span><h3>sqlmap, nikto, nuclei, gobuster, masscan</h3><p data-i18n="ca.3">User-Agent signatures.</p></article>
+    <article class="card wide reveal"><span class="tag mono" data-i18n="ca.4t">Unknown attacks</span><h3 data-i18n="ca.4h">Scans that match no signature</h3><p data-i18n="ca.4">A behavioural score from request rate, path diversity, User-Agent churn and the 4xx ratio.</p>
+      <div class="meter" aria-hidden="true"><i style="--v:.62"></i><i style="--v:.9"></i><i style="--v:.45"></i><i style="--v:.8"></i></div>
+    </article>
+    <article class="card reveal"><span class="tag mono" data-i18n="ca.5t">Known-bad sources</span><h3 data-i18n="ca.5h">Tor exits, abusive networks</h3><p data-i18n="ca.5">Offline CIDR reputation escalates the threat to critical.</p></article>
+    <article class="card reveal"><span class="tag mono" data-i18n="ca.6t">Tampering</span><h3 data-i18n="ca.6h">.env, configs, binaries</h3><p data-i18n="ca.6">A sha256 baseline, re-checked on a timer.</p></article>
+  </div>
+</section>
+
+<section class="builds" id="builds">
+  <div class="builds-head">
+    <p class="over mono" data-i18n="b.over">04 — Two builds, one codebase</p>
+    <h2 class="h2" data-i18n-html="b.h">Not a fork. <span class="acc">A JSON profile.</span></h2>
+  </div>
+  <div class="split">
+    <div class="side pub reveal">
+      <p class="mono k">public · <span data-i18n="b.comm">community</span></p>
+      <dl>
+        <div><dt data-i18n="b.mode">Mode</dt><dd data-i18n="b.monitor">monitor, reports only</dd></div>
+        <div><dt data-i18n="b.ban">Auto-ban</dt><dd data-i18n="b.off">off</dd></div>
+        <div><dt data-i18n="b.priv">Private rules</dt><dd data-i18n="b.notloaded">not loaded</dd></div>
+        <div><dt data-i18n="b.honey">Honeypot, active defense</dt><dd data-i18n="b.off">off</dd></div>
+        <div><dt data-i18n="b.alerts">Alerts</dt><dd>stdout</dd></div>
+      </dl>
+    </div>
+    <div class="side self reveal">
+      <p class="mono k">self · <span data-i18n="b.int">internal</span></p>
+      <dl>
+        <div><dt data-i18n="b.mode">Mode</dt><dd data-i18n="b.enforce">enforce, bans</dd></div>
+        <div><dt data-i18n="b.ban">Auto-ban</dt><dd data-i18n="b.on4">on, ×4 on repeat offenders</dd></div>
+        <div><dt data-i18n="b.priv">Private rules</dt><dd data-i18n="b.loaded">loaded</dd></div>
+        <div><dt data-i18n="b.honey">Honeypot, active defense</dt><dd data-i18n="b.on">on</dd></div>
+        <div><dt data-i18n="b.alerts">Alerts</dt><dd>stdout + Discord</dd></div>
+      </dl>
+    </div>
+  </div>
+  <p class="gate reveal" data-i18n-html="b.gate"><b>npm run dist:public</b> strips the internal profile, private rules and signing key, scans the output for secrets and asserts the public default is still passive. If any check fails the build is rejected, so an enforcing default can never reach a release by accident.</p>
+</section>
+
+<section class="panel-sec">
+  <div class="panel-head">
+    <p class="over mono" data-i18n="p.over">05 — Live panel</p>
+    <h2 class="h2" data-i18n="p.h">What happened, on one screen.</h2>
+    <p class="body" data-i18n="p.p">Bound to 127.0.0.1:8787. On any other interface it refuses to bind without TLK_PANEL_TOKEN, and says so. Every write endpoint validates its input: an IP that is not an IP never reaches nft.</p>
+  </div>
+  <figure class="shot reveal"><img src="img/panel.png" width="2880" height="2408" loading="lazy" alt="tlk-sentinel dashboard: live threat feed, severity split and ban list" data-i18n-alt="p.alt"></figure>
+</section>
+
+<section class="app">
+  <div>
+    <p class="over mono" data-i18n="ap.over">06 — Inside your app</p>
+    <h2 class="h2" data-i18n-html="ap.h">The same engine, <span class="acc">as middleware.</span></h2>
+    <p class="body" data-i18n="ap.p">Verdicts carry hardened response headers (nosniff, DENY, HSTS, a locked-down Permissions-Policy), so you can apply them to allowed responses as well.</p>
+  </div>
+<pre class="code mono"><code><span class="k">import</span> { WebGuard } <span class="k">from</span> <span class="s">"@tlk-sentinel/web"</span>;
+
+<span class="k">const</span> guard = <span class="k">new</span> WebGuard({
+  profilePath: <span class="s">"profiles/public.json"</span>,
+  rulesPublicDir: <span class="s">"rules/public"</span>,
+  trustedProxy: <span class="k">true</span>,
+});
+
+<span class="k">export async function</span> middleware(request: Request) {
+  <span class="k">const</span> verdict = <span class="k">await</span> guard.inspect(request, { trustProxy: <span class="k">true</span> });
+  <span class="k">if</span> (verdict.action === <span class="s">"block"</span>) {
+    <span class="k">return new</span> Response(<span class="s">"blocked"</span>, { status: verdict.status, headers: verdict.headers });
+  }
+}</code></pre>
+</section>
+
+<section class="proof">
+  <div class="proof-num reveal"><b>60</b><span data-i18n="pr.tests">tests, Node’s built-in runner, no framework</span></div>
+  <div class="proof-num reveal"><b>0</b><span data-i18n="pr.deps">runtime dependencies</span></div>
+  <div class="proof-num reveal"><b>3</b><span data-i18n="pr.enc">encodings with their own bypass regression tests</span></div>
+  <p class="proof-p reveal" data-i18n="pr.p">Ban thresholds and escalation, profile gating, reputation and country tables, anomaly cooldown, log tailing across truncation and logrotate, integrity baselines, the SQLite store and firewall input validation. Four integration tests boot the real agent against a live log file. Two more assert that a build with the attribution removed fails its signature check and refuses to enforce. CI runs on Linux and Windows, Node 22 and 24.</p>
+</section>
+
+<section class="install" id="install">
+  <div class="inst-grid">
+    <div>
+      <p class="over mono" data-i18n="i.over">07 — Install</p>
+      <h2 class="h2" data-i18n-html="i.h">Node 22.5+. <span class="acc">Nothing else.</span></h2>
+      <p class="body" data-i18n="i.p">The built-in SQLite is why the version matters. Read the threat model before deploying: what it does not catch, and the four ways the tool itself can be turned against you.</p>
+      <p class="links"><a href="https://github.com/Talkdedsec/tlk-sentinel/blob/main/docs/threat-model.md" data-i18n="i.tm">Threat model →</a><a href="https://github.com/Talkdedsec/tlk-sentinel/blob/main/docs/architecture.md" data-i18n="i.arch">Architecture →</a></p>
+    </div>
+    <div>
+<pre class="code mono"><code>git clone https://github.com/Talkdedsec/tlk-sentinel /opt/tlk-sentinel
+cd /opt/tlk-sentinel
+npm install
+npm run build
+cp .env.example .env
+npm run agent</code><button class="copy" type="button" data-i18n="copy">Copy</button></pre>
+<pre class="code mono"><code>sudo cp deploy/tlk-sentinel.service /etc/systemd/system/
+sudo systemctl enable --now tlk-sentinel</code><button class="copy" type="button" data-i18n="copy">Copy</button></pre>
+    </div>
+  </div>
+</section>
+
+<section class="license">
+  <p class="over mono" data-i18n="l.over">08 — Licence, the short version</p>
+  <div class="lic">
+    <ul class="yes">
+      <li data-i18n="l.y1">Run it on your own machines, including your company’s</li>
+      <li data-i18n="l.y2">Run it commercially for your own business</li>
+      <li data-i18n="l.y3">Read and modify the source for your own installation</li>
+      <li data-i18n="l.y4">Send a patch or a vulnerability report with code in it</li>
+    </ul>
+    <ul class="no">
+      <li data-i18n="l.n1">Redistribute, publish or mirror it</li>
+      <li data-i18n="l.n2">Sell it, rent it, or ship it inside a paid product</li>
+      <li data-i18n="l.n3">Host it as a service for someone else</li>
+      <li data-i18n="l.n4">Strip the attribution or the licence text</li>
+    </ul>
+  </div>
+  <p class="lic-foot" data-i18n-html="l.foot">The <a href="https://github.com/Talkdedsec/tlk-sentinel/blob/main/LICENSE">LICENSE</a> governs; this is a summary. Anything in the right-hand column can be bought: <a href="mailto:talkdedsec@proton.me">talkdedsec@proton.me</a></p>
+</section>
+</main>
+
+<footer class="foot">
+  <p class="foot-word" aria-hidden="true" data-i18n="foot.w">One story, not two.</p>
+  <div class="foot-row">
+    <nav aria-label="Project">
+      <a href="https://github.com/Talkdedsec/tlk-sentinel">GitHub</a>
+      <a href="https://github.com/Talkdedsec/tlk-sentinel/releases" data-i18n="foot.rel">Releases</a>
+      <a href="https://github.com/Talkdedsec/tlk-sentinel/blob/main/CHANGELOG.md" data-i18n="foot.log">Changelog</a>
+      <a href="https://github.com/Talkdedsec/tlk-sentinel/security/policy" data-i18n="foot.sec">Security</a>
+    </nav>
+    <p class="mono">Source-available · © 2026 <a href="https://talkdedsec.com">Talkdedsec</a></p>
+  </div>
+</footer>
+</body>
+</html>
